@@ -1,0 +1,62 @@
+.note-board {
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--rp-c-brand) 28%, var(--rp-c-divider));
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--rp-c-brand) 10%, transparent),
+      color-mix(in srgb, var(--rp-c-bg) 96%, transparent)
+    );
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--rp-c-brand) 8%, transparent);
+  color: var(--rp-c-text-2);
+}
+
+.note-board__heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: var(--rp-c-text-1);
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.note-board__marker {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rp-c-brand);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rp-c-brand) 14%, transparent);
+}
+
+.note-board p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.note-board--home {
+  width: min(1120px, calc(100% - 48px));
+  margin: 2px auto 44px;
+  padding: 18px 20px;
+}
+
+.note-board--home p {
+  font-size: 14px;
+}
+
+.note-board--sidebar {
+  flex: none;
+  margin: 16px 12px 14px;
+  padding: 14px;
+}
+
+@media (max-width: 768px) {
+  .note-board--home {
+    width: calc(100% - 32px);
+    margin-bottom: 32px;
+    padding: 16px;
+  }
+}
