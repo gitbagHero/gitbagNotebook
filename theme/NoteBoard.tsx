@@ -1,5 +1,5 @@
 const NOTE =
-  '根据PPT整理的初版笔记，还未调整冲突内容，未美化笔记格式与排版，后续会更新7-03，7-04的主观题专题笔记等内容，认真复习喵';
+  '版本V1.1.0 修复高亮以及latex公式无法渲染问题 认真复习喵';
 
 interface NoteBoardProps {
   variant: 'home' | 'sidebar';

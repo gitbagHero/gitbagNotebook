@@ -4,6 +4,7 @@ import {
 } from '@rspress/core/theme-original';
 import { NoteBoard } from './NoteBoard';
 
+import 'katex/dist/katex.min.css';
 import './styles.css';
 
 export * from '@rspress/core/theme-original';
