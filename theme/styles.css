@@ -53,6 +53,19 @@
   padding: 14px;
 }
 
+.rp-sidebar-item[href^='/01_第0章_'] .rp-sidebar-item__left::after,
+.rp-sidebar-item[href^='/02_第6章_'] .rp-sidebar-item__left::after {
+  content: '';
+  display: inline-block;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: var(--rp-c-brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rp-c-brand) 14%, transparent);
+}
+
 .rspress-doc mark.flexible-marker {
   border-radius: 4px;
   padding: 0.08em 0.24em;

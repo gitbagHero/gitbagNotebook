@@ -1,5 +1,5 @@
 const NOTE =
-  '版本V1.1.0 修复高亮以及latex公式无法渲染问题 认真复习喵';
+  'V1.2.0 更新第0章以及第六章笔记，以当前笔记内容为准 稳定更新中喵';
 
 interface NoteBoardProps {
   variant: 'home' | 'sidebar';
