@@ -1,5 +1,5 @@
 const NOTE =
-  'V1.3.0 更新第七章02内容 持续更新喵';
+  'V1.3.1 第七章03内容更新，第七章03涉及到主观题需要配合课件进行复习 持续更新喵';
 
 interface NoteBoardProps {
   variant: 'home' | 'sidebar';

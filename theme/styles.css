@@ -56,7 +56,8 @@
 .rp-sidebar-item[href^='/01_第0章_'] .rp-sidebar-item__left::after,
 .rp-sidebar-item[href^='/02_第6章_'] .rp-sidebar-item__left::after,
 .rp-sidebar-item[href^='/03_第7章01_'] .rp-sidebar-item__left::after,
-.rp-sidebar-item[href^='/04_第7章02_'] .rp-sidebar-item__left::after {
+.rp-sidebar-item[href^='/04_第7章02_'] .rp-sidebar-item__left::after,
+.rp-sidebar-item[href^='/05_第7章03_'] .rp-sidebar-item__left::after {
   content: '';
   display: inline-block;
   flex: none;
