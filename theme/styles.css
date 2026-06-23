@@ -68,6 +68,72 @@
   padding-block: 4px;
 }
 
+@media (max-width: 1439px) {
+  html:root {
+    --rp-sidebar-menu-height: 46px;
+  }
+
+  .rp-sidebar-menu {
+    display: flex;
+  }
+
+  .rp-doc-layout__sidebar {
+    z-index: var(--rp-z-index-sidebar);
+    top: calc(var(--rp-nav-height) + var(--rp-banner-height, 0px));
+    height: calc(100vh - var(--rp-nav-height) - var(--rp-banner-height, 0px));
+    padding: var(--rp-sidebar-padding) var(--rp-sidebar-padding)
+      calc(var(--rp-sidebar-padding) + 100px) var(--rp-sidebar-padding);
+    background: var(--rp-c-bg);
+    opacity: 0;
+    visibility: hidden;
+    margin-top: 0;
+    transition:
+      opacity 0.25s,
+      visibility 0.25s,
+      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    position: fixed;
+    overflow: auto scroll;
+    transform: translateX(-100%);
+  }
+
+  .rp-doc-layout__sidebar--open {
+    opacity: 1;
+    visibility: visible;
+    left: 0;
+    transform: translateX(0);
+  }
+
+  .rp-doc-layout__outline {
+    background-color: color-mix(in srgb, var(--rp-c-bg) 60%, transparent);
+    backdrop-filter: blur(25px);
+    border-radius: var(--rp-radius-small);
+    max-width: 100%;
+    height: auto;
+    box-shadow: var(--rp-shadow-2);
+    visibility: hidden;
+    opacity: 0;
+    padding: 20px 0;
+    transition:
+      opacity 0.2s,
+      visibility 0.2s,
+      transform 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+    position: fixed;
+    inset-inline-end: 0;
+    transform: translateY(-10px);
+  }
+
+  .rp-doc-layout__outline--open {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+    transform: translate(0, 0);
+  }
+
+  .rp-sidebar-menu__mask {
+    display: block;
+  }
+}
+
 @media (max-width: 768px) {
   .note-board--home {
     width: calc(100% - 32px);
