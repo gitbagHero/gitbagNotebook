@@ -1,5 +1,5 @@
 const NOTE =
-  'V1.6.0 添加小测整理 明日2点考试喵';
+  'V2.0.0 更新答题系统 加油喵';
 
 interface NoteBoardProps {
   variant: 'home' | 'sidebar';
