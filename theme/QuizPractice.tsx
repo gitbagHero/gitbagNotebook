@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import quiz251 from '../md笔记/09_小测整理_25-1.md?raw';
 import quiz252 from '../md笔记/10_小测整理_25-2.md?raw';
@@ -149,6 +149,7 @@ function defaultAnswer(question: QuizQuestion): string | string[] {
 }
 
 const ALL_QUESTIONS = SOURCES.flatMap(parseQuestions);
+const PAGE_SIZE = 15;
 
 export function QuizPractice() {
   const [sourceFilter, setSourceFilter] = useState('all');
@@ -156,6 +157,7 @@ export function QuizPractice() {
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [checked, setChecked] = useState<CheckedMap>({});
   const [showAnswers, setShowAnswers] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const questions = useMemo(
     () =>
@@ -166,11 +168,26 @@ export function QuizPractice() {
       }),
     [sourceFilter, typeFilter],
   );
+  const totalPages = Math.max(1, Math.ceil(questions.length / PAGE_SIZE));
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const pageQuestions = questions.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const pageCheckedQuestions = pageQuestions.filter((question) => checked[question.id]);
 
-  const checkedQuestions = questions.filter((question) => checked[question.id]);
-  const correctCount = checkedQuestions.filter((question) =>
+  const correctCount = pageCheckedQuestions.filter((question) =>
     isCorrect(question, answers[question.id]),
   ).length;
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setShowAnswers(false);
+  }, [sourceFilter, typeFilter]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   function setAnswer(question: QuizQuestion, value: string | string[]) {
     setAnswers((current) => ({ ...current, [question.id]: value }));
@@ -186,9 +203,12 @@ export function QuizPractice() {
     setAnswer(question, next);
   }
 
-  function checkAll() {
+  function checkPage() {
     setChecked(
-      Object.fromEntries(questions.map((question) => [question.id, true])),
+      (current) => ({
+        ...current,
+        ...Object.fromEntries(pageQuestions.map((question) => [question.id, true])),
+      }),
     );
     setShowAnswers(true);
   }
@@ -197,6 +217,21 @@ export function QuizPractice() {
     setAnswers({});
     setChecked({});
     setShowAnswers(false);
+    setCurrentPage(1);
+  }
+
+  function goToPage(page: number) {
+    setCurrentPage(Math.min(Math.max(page, 1), totalPages));
+    setShowAnswers(false);
+
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        document.querySelector('.quiz-practice')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      });
+    }
   }
 
   return (
@@ -212,8 +247,8 @@ export function QuizPractice() {
         </div>
         <div className="quiz-practice__score">
           <span>{correctCount}</span>
-          <small>/ {checkedQuestions.length || questions.length}</small>
-          <em>{checkedQuestions.length ? '已判分' : '待作答'}</em>
+          <small>/ {pageCheckedQuestions.length || pageQuestions.length}</small>
+          <em>{pageCheckedQuestions.length ? '本页已判分' : '本页待作答'}</em>
         </div>
       </div>
 
@@ -241,11 +276,11 @@ export function QuizPractice() {
             <option value="judge">判断题</option>
           </select>
         </label>
-        <button type="button" onClick={checkAll}>
-          交卷判分
+        <button type="button" onClick={checkPage}>
+          检查本页
         </button>
         <button type="button" className="quiz-practice__ghost" onClick={() => setShowAnswers((value) => !value)}>
-          {showAnswers ? '隐藏答案' : '显示答案'}
+          {showAnswers ? '隐藏本页答案' : '显示本页答案'}
         </button>
         <button type="button" className="quiz-practice__ghost" onClick={resetAll}>
           重置
@@ -256,10 +291,43 @@ export function QuizPractice() {
         当前显示 {questions.length} 题：填空 {questions.filter((item) => item.type === 'fill').length}，
         选择 {questions.filter((item) => item.type === 'choice').length}，判断{' '}
         {questions.filter((item) => item.type === 'judge').length}。
+        第 {currentPage} / {totalPages} 页，本页 {pageQuestions.length} 题。
       </div>
 
+      <nav className="quiz-practice__pagination" aria-label="答题分页">
+        <button
+          type="button"
+          className="quiz-practice__ghost"
+          disabled={currentPage === 1}
+          onClick={() => goToPage(currentPage - 1)}
+        >
+          上一页
+        </button>
+        <div className="quiz-practice__page-list">
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              type="button"
+              className={page === currentPage ? 'is-active' : 'quiz-practice__ghost'}
+              aria-current={page === currentPage ? 'page' : undefined}
+              onClick={() => goToPage(page)}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="quiz-practice__ghost"
+          disabled={currentPage === totalPages}
+          onClick={() => goToPage(currentPage + 1)}
+        >
+          下一页
+        </button>
+      </nav>
+
       <div className="quiz-practice__list">
-        {questions.map((question, index) => {
+        {pageQuestions.map((question, index) => {
           const current = answers[question.id] ?? defaultAnswer(question);
           const hasChecked = checked[question.id];
           const correct = isCorrect(question, current);
@@ -270,7 +338,7 @@ export function QuizPractice() {
               className={`quiz-card ${hasChecked ? (correct ? 'quiz-card--correct' : 'quiz-card--wrong') : ''}`}
             >
               <div className="quiz-card__meta">
-                <span>{index + 1}</span>
+                <span>{pageStart + index + 1}</span>
                 <span>{question.sourceTitle}</span>
                 <span>{typeLabel(question.type)}</span>
               </div>
@@ -344,6 +412,28 @@ export function QuizPractice() {
           );
         })}
       </div>
+
+      <nav className="quiz-practice__pagination quiz-practice__pagination--bottom" aria-label="答题分页">
+        <button
+          type="button"
+          className="quiz-practice__ghost"
+          disabled={currentPage === 1}
+          onClick={() => goToPage(currentPage - 1)}
+        >
+          上一页
+        </button>
+        <span>
+          第 {currentPage} / {totalPages} 页
+        </span>
+        <button
+          type="button"
+          className="quiz-practice__ghost"
+          disabled={currentPage === totalPages}
+          onClick={() => goToPage(currentPage + 1)}
+        >
+          下一页
+        </button>
+      </nav>
     </div>
   );
 }
