@@ -1,5 +1,5 @@
 const NOTE =
-  'V1.5.1 笔记内容全部更新完毕，修复页面展示无法折叠边栏问题 最后的波纹喵';
+  'V1.6.0 添加小测整理 明日2点考试喵';
 
 interface NoteBoardProps {
   variant: 'home' | 'sidebar';
